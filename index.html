@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Meta Tags -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Invoice Generator</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link href="styles.css" rel="stylesheet">
+  
+  <!-- Optional: Font Awesome for Icons (if needed) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 class="mb-4">Invoice Generator</h1>
+    
+    <!-- Invoice Form -->
+    <form id="invoice-form">
+      <!-- Invoice Number and Date Section -->
+      <div class="mb-3">
+        <label for="invoiceNumber" class="form-label">Invoice Number</label>
+        <div class="input-group">
+          <span class="input-group-text">INV-</span>
+          <input type="text" class="form-control" id="invoiceNumber" readonly>
+          <span class="input-group-text">-</span>
+          <input type="text" class="form-control" id="invoiceSequence" placeholder="001" maxlength="3" required>
+        </div>
+      </div>
+      
+      <div class="mb-3">
+        <label for="invoiceDate" class="form-label">Invoice Date</label>
+        <input type="text" class="form-control" id="invoiceDate" readonly>
+      </div>
+      
+      <!-- Optional: Company Logo Preview -->
+      <div class="mb-4 text-center">
+        <img src="assets/darklogo2.png" alt="Company Logo" id="form-logo" style="max-width: 200px;">
+      </div>
+      
+      <!-- Invoice To Section -->
+      <div class="mb-3">
+        <label for="invoiceToName" class="form-label">Invoice To Name <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" id="invoiceToName" placeholder="Enter recipient's name" required>
+      </div>
+      
+      <div class="mb-3">
+        <label for="invoiceEmail" class="form-label">Invoice To Email <span class="text-danger">*</span></label>
+        <input type="email" class="form-control" id="invoiceEmail" placeholder="Enter recipient's email" required>
+      </div>
+      
+      <!-- Address Section -->
+      <div class="mb-3 position-relative">
+        <label for="postcode" class="form-label">Postcode / Partial Address</label>
+        <input type="text" class="form-control" id="postcode" placeholder="Enter postcode or partial address" required>
+        <div id="address-suggestions" class="list-group"></div>
+      </div>
+      
+      <!-- Address Fields (Initially Hidden) -->
+      <div id="address-fields" style="display: none;" class="mb-3">
+        <div class="mb-3">
+          <label for="addressLine1" class="form-label">Address Line 1 <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" id="addressLine1" placeholder="Address Line 1" required>
+        </div>
+        
+        <div class="mb-3">
+          <label for="addressLine2" class="form-label">Address Line 2 <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" id="addressLine2" placeholder="Address Line 2" required>
+        </div>
+        
+        <div class="mb-3">
+          <label for="city" class="form-label">City <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" id="city" placeholder="City" required>
+        </div>
+        
+        <div class="mb-3">
+          <label for="postalCode" class="form-label">Postal Code <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" id="postalCode" placeholder="Postal Code" required>
+        </div>
+        
+        <div class="mb-3">
+          <label for="country" class="form-label">Country <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" id="country" placeholder="Country" required>
+        </div>
+      </div>
+      
+      <!-- Enter Address Manually Button -->
+      <div class="mb-3">
+        <button type="button" id="enter-address-manually" class="btn btn-secondary">Enter Address Manually</button>
+      </div>
+      
+      <!-- Items Section -->
+      <div class="mb-3">
+        <h4>Items <span class="text-danger">*</span></h4>
+        <div id="items-container">
+          <!-- Initial Item Row -->
+          <div class="row mb-2 item">
+            <div class="col-md-4">
+              <input type="text" class="form-control" placeholder="Item Description" required>
+            </div>
+            <div class="col-md-3">
+              <input type="number" class="form-control" placeholder="Amount (£)" min="0" step="0.01" required>
+            </div>
+            <div class="col-md-3">
+              <input type="text" class="form-control" placeholder="Image URL (Optional)">
+            </div>
+            <div class="col-md-2">
+              <button type="button" class="btn btn-danger remove-item">Remove</button>
+            </div>
+          </div>
+        </div>
+        <button type="button" id="add-item" class="btn btn-primary">Add Item</button>
+      </div>
+      
+      <!-- Courier Details and Payment Instructions -->
+      <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="includeCourier">
+        <label class="form-check-label" for="includeCourier">Include Courier Contact Details</label>
+      </div>
+      
+      <div id="courier-details" style="display: none;" class="mb-3">
+        <div class="mb-3">
+          <label for="courierName" class="form-label">Courier Name <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" id="courierName" placeholder="Enter courier's name">
+        </div>
+        
+        <div class="mb-3">
+          <label for="courierNumber" class="form-label">Courier Number <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" id="courierNumber" placeholder="Enter courier's contact number">
+        </div>
+        
+        <!-- Payment Instructions -->
+        <div class="mb-3">
+          <label for="paymentInstructions" class="form-label">Payment Instructions <span class="text-danger">*</span></label>
+          <textarea class="form-control" id="paymentInstructions" rows="3" placeholder="Enter payment instructions" required></textarea>
+        </div>
+      </div>
+      
+      <!-- Bank Details -->
+      <div class="mb-3">
+        <h4>Bank Details <span class="text-danger">*</span></h4>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="bankDetails" id="option1" value="option1" checked>
+          <label class="form-check-label" for="option1">
+            Option 1: Mrs Marcia Platts
+          </label>
+        </div>
+        <div id="bank-option1" class="mt-2">
+          <p>
+            Mrs Marcia Platts<br>
+            A/c. 64237273<br>
+            Sort. 01-08-38
+          </p>
+        </div>
+        
+        <div class="form-check mt-2">
+          <input class="form-check-input" type="radio" name="bankDetails" id="option2" value="option2">
+          <label class="form-check-label" for="option2">
+            Option 2: Enter Bank Details Manually
+          </label>
+        </div>
+        <div id="bank-option2" class="mt-2" style="display: none;">
+          <div class="mb-3">
+            <label for="accountHolder" class="form-label">Account Holder <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="accountHolder" placeholder="Enter account holder's name">
+          </div>
+          <div class="mb-3">
+            <label for="accountNumber" class="form-label">Account Number <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="accountNumber" placeholder="Enter account number">
+          </div>
+          <div class="mb-3">
+            <label for="sortCode" class="form-label">Sort Code <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="sortCode" placeholder="Enter sort code">
+          </div>
+        </div>
+      </div>
+      
+      <!-- Footer -->
+      <div class="mb-3">
+        <label for="footer" class="form-label">Footer</label>
+        <input type="text" class="form-control" id="footer" placeholder="Enter footer text">
+      </div>
+      
+      <!-- Generate Invoice Button -->
+      <button type="button" id="generateInvoice" class="btn btn-success">Generate Invoice</button>
+    </form>
+    
+    <!-- Hidden Invoice Content for PDF Generation -->
+    <div id="invoice-content" style="display: none;"></div>
+  </div>
+  
+  <!-- Bootstrap JS Bundle (includes Popper) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Include jsPDF and html2canvas Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  
+  <!-- Custom Script -->
+  <script src="script.js"></script>
+</body>
+</html>
