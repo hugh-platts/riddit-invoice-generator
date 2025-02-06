@@ -2,118 +2,118 @@
 
 /* General Styles */
 body {
-    background-color: #f8f9fa;
-    font-family: Arial, sans-serif; /* Consistent font across the application */
-    margin: 0;
-    padding: 0;
+  background-color: #f8f9fa;
+  font-family: Arial, sans-serif; /* Consistent font across the application */
+  margin: 0;
+  padding: 0;
 }
 
 /* Invoice Content */
 #invoice-content {
-    display: none; /* Hide from view */
+  display: none; /* Hide from view */
 }
 
 /* Invoice PDF Content */
 .invoice-pdf-content {
-    width: 700px; /* Reduced width to better fit A4 page */
-    background-color: #fff;
-    padding: 20px;
-    border: 1px solid #333;
+  width: 700px; /* Reduced width to better fit A4 page */
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #333;
 }
 
 /* Company Logo */
 .invoice-pdf-content .invoice-logo {
-    width: 150px; /* Adjust width as needed */
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 0 auto 20px auto; /* Center the logo and add bottom margin */
+  width: 150px; /* Adjust width as needed */
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto 20px auto; /* Center the logo and add bottom margin */
 }
 
 /* Invoice Header */
 .invoice-pdf-content h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 2em;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 2em;
 }
 
 /* Invoice Subheaders */
 .invoice-pdf-content h4 {
-    margin-top: 30px;
-    margin-bottom: 10px;
-    font-size: 1.5em;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  font-size: 1.5em;
 }
 
 /* Invoice Tables */
 .invoice-pdf-content table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
 }
 
 .invoice-pdf-content table, 
 .invoice-pdf-content th, 
 .invoice-pdf-content td {
-    border: 1px solid #333;
+  border: 1px solid #333;
 }
 
 .invoice-pdf-content th, 
 .invoice-pdf-content td {
-    padding: 8px;
-    text-align: left;
-    vertical-align: top; /* Ensure content starts at the top of each cell */
+  padding: 8px;
+  text-align: left;
+  vertical-align: top; /* Ensure content starts at the top of each cell */
 }
 
 .invoice-pdf-content th {
-    background-color: #f2f2f2; /* Light gray background for headers */
+  background-color: #f2f2f2; /* Light gray background for headers */
 }
 
 /* Item Images */
 .invoice-pdf-content .item-image {
-    max-width: 100px;
-    max-height: 100px;
+  max-width: 100px;
+  max-height: 100px;
 }
 
 /* Invoice Footer */
 .invoice-pdf-content footer {
-    text-align: center;
-    font-size: 0.9em;
-    color: #555;
-    margin-top: 40px;
-    border-top: 1px solid #ccc;
-    padding-top: 10px;
+  text-align: center;
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 40px;
+  border-top: 1px solid #ccc;
+  padding-top: 10px;
 }
 
 /* Address Suggestions Dropdown */
 #address-suggestions {
-    position: absolute;
-    z-index: 1000;
-    width: 100%;
-    max-height: 200px;
-    overflow-y: auto;
-    background-color: #fff; /* White background for suggestions */
-    border: 1px solid #ced4da; /* Light border */
-    border-top: none; /* Remove top border to connect with input field */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  position: absolute;
+  z-index: 1000;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: #fff; /* White background for suggestions */
+  border: 1px solid #ced4da; /* Light border */
+  border-top: none; /* Remove top border to connect with input field */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
 
 /* Individual Suggestion Items */
 #address-suggestions .list-group-item {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 #address-suggestions .list-group-item:hover {
-    background-color: #e9ecef; /* Light gray on hover */
+  background-color: #e9ecef; /* Light gray on hover */
 }
 
 /* Loading Indicator - Styled via JS */
 #loading-indicator {
-    /* Styles are dynamically added via JavaScript */
+  /* Styles are dynamically added via JavaScript */
 }
 
 /* Position Relative Class */
 .position-relative {
-    position: relative;
+  position: relative;
 }
 
 /* PDF Specific Styles */
@@ -121,98 +121,98 @@ body {
 /* Prevent headings from being split across pages */
 .invoice-pdf-content h2, 
 .invoice-pdf-content h4 {
-    page-break-after: avoid;
-    page-break-inside: avoid;
+  page-break-after: avoid;
+  page-break-inside: avoid;
 }
 
 /* Allow tables to break across pages but prevent rows from splitting */
 .invoice-pdf-content table {
-    page-break-inside: auto;
+  page-break-inside: auto;
 }
 
 .invoice-pdf-content tr {
-    page-break-inside: avoid;
-    page-break-after: auto;
+  page-break-inside: avoid;
+  page-break-after: auto;
 }
 
 .invoice-pdf-content td {
-    page-break-inside: avoid;
-    page-break-after: auto;
+  page-break-inside: avoid;
+  page-break-after: auto;
 }
 
 /* Optional: Add space after the table */
 .invoice-pdf-content table {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 /* Responsive Design for On-Screen Elements */
 @media (max-width: 768px) {
-    /* Adjust the width of the invoice-content for smaller screens if needed */
-    .invoice-pdf-content {
-        width: 100%;
-    }
-    
-    /* Adjust table font sizes for better readability */
-    .invoice-pdf-content table, 
-    .invoice-pdf-content th, 
-    .invoice-pdf-content td {
-        font-size: 0.9em;
-    }
+  /* Adjust the width of the invoice-content for smaller screens if needed */
+  .invoice-pdf-content {
+      width: 100%;
+  }
+  
+  /* Adjust table font sizes for better readability */
+  .invoice-pdf-content table, 
+  .invoice-pdf-content th, 
+  .invoice-pdf-content td {
+      font-size: 0.9em;
+  }
 }
 
 /* Additional Styling for Better Appearance */
 .invoice-pdf-content p {
-    line-height: 1.6; /* Improve readability */
+  line-height: 1.6; /* Improve readability */
 }
 
 .invoice-pdf-content strong {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 /* Button Styles (Optional Enhancement) */
 .btn {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .btn-primary {
-    background-color: #007bff;
-    border: none;
+  background-color: #007bff;
+  border: none;
 }
 
 .btn-primary:hover {
-    background-color: #0069d9;
+  background-color: #0069d9;
 }
 
 .btn-danger {
-    background-color: #dc3545;
-    border: none;
+  background-color: #dc3545;
+  border: none;
 }
 
 .btn-danger:hover {
-    background-color: #c82333;
+  background-color: #c82333;
 }
 
 .btn-secondary {
-    background-color: #6c757d;
-    border: none;
+  background-color: #6c757d;
+  border: none;
 }
 
 .btn-secondary:hover {
-    background-color: #5a6268;
+  background-color: #5a6268;
 }
 
 .btn-success {
-    background-color: #28a745;
-    border: none;
+  background-color: #28a745;
+  border: none;
 }
 
 .btn-success:hover {
-    background-color: #218838;
+  background-color: #218838;
 }
 
 /* Spinner for Loading Indicator */
 .spinner-border {
-    width: 1.5rem;
-    height: 1.5rem;
-    border-width: 0.2em;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-width: 0.2em;
 }
