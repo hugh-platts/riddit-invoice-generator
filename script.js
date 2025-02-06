@@ -418,7 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="p-4 invoice-pdf-content">
         <!-- Company Logo -->
         <div class="text-center mb-4">
-          <img src="assets/logo-dark2.jpeg" alt="Company Logo" class="invoice-logo">
+          <img src="https://github.com/hugh-platts/riddit-invoice-generator/blob/main/darklogo2.png?raw=true" alt="Company Logo" class="invoice-logo">
         </div>
         <h2>Invoice</h2>
         <p><strong>Invoice Number:</strong> ${sanitizeHTML(invoiceNumber)}</p>
