@@ -418,7 +418,11 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="p-4 invoice-pdf-content">
         <!-- Company Logo -->
         <div class="text-center mb-4">
-          <img src="https://github.com/hugh-platts/riddit-invoice-generator/blob/main/darklogo2.png?raw=true" alt="Company Logo" class="invoice-logo">
+          <img 
+            src="https://raw.githubusercontent.com/hugh-platts/riddit-invoice-generator/main/darklogo2.png" 
+            alt="Company Logo" 
+            class="invoice-logo"
+          >
         </div>
         <h2>Invoice</h2>
         <p><strong>Invoice Number:</strong> ${sanitizeHTML(invoiceNumber)}</p>
@@ -525,7 +529,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Options for html2canvas
       const options = {
-        scale: 0.24, // Adjusted scale as per user's feedback
+        scale: 0.24, // Adjust to control resolution
         useCORS: true, // Enable cross-origin images
         logging: true,
         windowWidth: invoiceContent.scrollWidth,
@@ -536,13 +540,13 @@ document.addEventListener('DOMContentLoaded', () => {
       await pdf.html(invoiceContent, {
         callback: function (pdfDoc) {
           // Define the filename as "RecipientName_INV-YYYYMMDD-XXX.pdf"
-          const sanitizedRecipientName = recipientName.replace(/[^a-z0-9]/gi, '_'); // Replace non-alphanumerics with underscores
+          const sanitizedRecipientName = recipientName.replace(/[^a-z0-9]/gi, '_'); // Replace non-alphanumerics
           const filename = `${sanitizedRecipientName}_${invoiceNumber}.pdf`;
           pdfDoc.save(filename);
         },
         x: 10,
         y: 10,
-        width: 190, // Width in mm (A4 width is 210mm - 2*10mm margins)
+        width: 190, // A4 is 210mm wide; we use small margins
         windowWidth: invoiceContent.scrollWidth,
         html2canvas: options,
       });
