@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Fetch address suggestions from GetAddress.io
-    fetch(`https://api.getaddress.io/autocomplete/${encodeURIComponent(term)}?api-key=6VGcyzwtQ0iq-6d0YoFK8w44913`)
+    fetch(`https://api.getaddress.io/autocomplete/${encodeURIComponent(term)}?api-key=heglC-86bEKbtGRtf53uHw45283`)
       .then(response => {
         if (!response.ok) {
           throw new Error(`API request failed with status ${response.status}`);
