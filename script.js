@@ -529,7 +529,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Options for html2canvas
       const options = {
-        scale: 0.24, // Adjust to control resolution
+        scale: 0.27, // Adjust to control resolution
         useCORS: true, // Enable cross-origin images
         logging: true,
         windowWidth: invoiceContent.scrollWidth,
