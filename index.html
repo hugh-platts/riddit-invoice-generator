@@ -1,180 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Meta Tags -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Invoice Generator</title>
-  
-  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  
-  <!-- Optional: Font Awesome for Icons (if needed) -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
-  <!-- Combined Custom CSS -->
   <style>
-    /* General Styles */
-    body {
-      background-color: #f8f9fa;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-
-    /* Invoice Content */
-    #invoice-content {
-      display: none;
-    }
-
-    /* Invoice PDF Content */
-    .invoice-pdf-content {
-      width: 700px;
-      background-color: #fff;
-      padding: 20px;
-      border: 1px solid #333;
-    }
-
-    /* Company Logo */
-    .invoice-pdf-content .invoice-logo {
-      width: 150px;
-      max-width: 100%;
-      height: auto;
-      display: block;
-      margin: 0 auto 20px auto;
-    }
-
-    /* Invoice Header */
-    .invoice-pdf-content h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 2em;
-    }
-
-    /* Invoice Subheaders */
-    .invoice-pdf-content h4 {
-      margin-top: 30px;
-      margin-bottom: 10px;
-      font-size: 1.5em;
-    }
-
-    /* Invoice Tables */
-    .invoice-pdf-content table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-
-    .invoice-pdf-content table, 
-    .invoice-pdf-content th, 
-    .invoice-pdf-content td {
-      border: 1px solid #333;
-    }
-
-    .invoice-pdf-content th, 
-    .invoice-pdf-content td {
-      padding: 8px;
-      text-align: left;
-      vertical-align: top;
-    }
-
-    .invoice-pdf-content th {
-      background-color: #f2f2f2;
-    }
-
-    /* Item Images */
-    .invoice-pdf-content .item-image {
-      max-width: 100px;
-      max-height: 100px;
-    }
-
-    /* Invoice Footer */
-    .invoice-pdf-content footer {
-      text-align: center;
-      font-size: 0.9em;
-      color: #555;
-      margin-top: 40px;
-      border-top: 1px solid #ccc;
-      padding-top: 10px;
-    }
-
-    /* Address Suggestions Dropdown */
-    #address-suggestions {
-      position: absolute;
-      z-index: 1000;
-      width: 100%;
-      max-height: 200px;
-      overflow-y: auto;
-      background-color: #fff;
-      border: 1px solid #ced4da;
-      border-top: none;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    #address-suggestions .list-group-item {
-      cursor: pointer;
-    }
-
-    #address-suggestions .list-group-item:hover {
-      background-color: #e9ecef;
-    }
-
-    .position-relative {
-      position: relative;
-    }
-
-    .invoice-pdf-content h2, 
-    .invoice-pdf-content h4 {
-      page-break-after: avoid;
-      page-break-inside: avoid;
-    }
-
-    .invoice-pdf-content table {
-      page-break-inside: auto;
-      margin-bottom: 20px;
-    }
-
-    .invoice-pdf-content tr {
-      page-break-inside: avoid;
-      page-break-after: auto;
-    }
-
-    .invoice-pdf-content td {
-      page-break-inside: avoid;
-      page-break-after: auto;
-    }
-
-    @media (max-width: 768px) {
-      .invoice-pdf-content {
-          width: 100%;
-      }
-      .invoice-pdf-content table, 
-      .invoice-pdf-content th, 
-      .invoice-pdf-content td {
-          font-size: 0.9em;
-      }
-    }
-
-    .invoice-pdf-content p {
-      line-height: 1.6;
-    }
-
-    .invoice-pdf-content strong {
-      font-weight: bold;
-    }
-
-    .btn {
-      cursor: pointer;
-    }
+    body { background-color: #f8f9fa; font-family: Arial, sans-serif; margin: 0; padding: 0; }
+    #invoice-content { display: none; }
+    .invoice-pdf-content { width: 700px; background-color: #fff; padding: 20px; border: 1px solid #333; }
+    .invoice-pdf-content .invoice-logo { width: 150px; max-width: 100%; height: auto; display: block; margin: 0 auto 20px auto; }
+    .invoice-pdf-content h2 { text-align: center; margin-bottom: 20px; font-size: 2em; }
+    .invoice-pdf-content h4 { margin-top: 30px; margin-bottom: 10px; font-size: 1.5em; }
+    .invoice-pdf-content table { width: 100%; border-collapse: collapse; margin-bottom: 20px; page-break-inside: auto; }
+    .invoice-pdf-content table, .invoice-pdf-content th, .invoice-pdf-content td { border: 1px solid #333; }
+    .invoice-pdf-content th, .invoice-pdf-content td { padding: 8px; text-align: left; vertical-align: top; page-break-inside: avoid; page-break-after: auto; }
+    .invoice-pdf-content tr { page-break-inside: avoid; page-break-after: auto; }
+    .invoice-pdf-content th { background-color: #f2f2f2; }
+    .invoice-pdf-content .item-image { max-width: 100px; max-height: 100px; object-fit: contain; }
+    .invoice-pdf-content footer { text-align: center; font-size: 0.9em; color: #555; margin-top: 40px; border-top: 1px solid #ccc; padding-top: 10px; }
+    #address-suggestions { position: absolute; z-index: 1000; width: 100%; max-height: 200px; overflow-y: auto; background-color: #fff; border: 1px solid #ced4da; border-top: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+    #address-suggestions .list-group-item { cursor: pointer; }
+    #address-suggestions .list-group-item:hover { background-color: #e9ecef; }
+    .position-relative { position: relative; }
+    .invoice-pdf-content h2, .invoice-pdf-content h4 { page-break-after: avoid; page-break-inside: avoid; }
+    .invoice-pdf-content p { line-height: 1.6; }
+    .invoice-pdf-content strong { font-weight: bold; }
+    .btn { cursor: pointer; }
+    .image-preview-thumbnail { max-width: 50px; max-height: 50px; margin-top: 5px; display: none; }
   </style>
 </head>
 <body>
   <div class="container mt-5">
     <h1 class="mb-4">Invoice Generator</h1>
     
-    <!-- Invoice Form -->
     <form id="invoice-form">
-      <!-- Invoice Number and Date Section -->
+      <!-- Invoice Number and Date -->
       <div class="mb-3">
         <label for="invoiceNumber" class="form-label">Invoice Number</label>
         <div class="input-group">
@@ -190,12 +51,11 @@
         <input type="text" class="form-control" id="invoiceDate" readonly>
       </div>
       
-      <!-- Optional: Company Logo Preview -->
       <div class="mb-4 text-center">
         <img src="https://lh4.googleusercontent.com/3V73wOQ05wHrc2ytYs9m-nevOwktL0VfgD5aelBrxVcxDFYw0zpmy6co8w-Don93l643vyMso_2MpWHlbfAQkd2XsPZWoEW7n9oA0A3L1OKsdbI7pw7h8gMfl24yXvLNIA=w1280" alt="Company Logo" id="form-logo" style="max-width: 200px;">
       </div>
       
-      <!-- Invoice To Section -->
+      <!-- Invoice To -->
       <div class="mb-3">
         <label for="invoiceToName" class="form-label">Invoice To Name <span class="text-danger">*</span></label>
         <input type="text" class="form-control" id="invoiceToName" placeholder="Enter recipient's name" required>
@@ -206,42 +66,21 @@
         <input type="email" class="form-control" id="invoiceEmail" placeholder="Enter recipient's email" required>
       </div>
       
-      <!-- Address Section -->
+      <!-- Address -->
       <div class="mb-3 position-relative">
         <label for="postcode" class="form-label">Postcode / Partial Address</label>
         <input type="text" class="form-control" id="postcode" placeholder="Enter postcode or partial address" required>
         <div id="address-suggestions" class="list-group"></div>
       </div>
       
-      <!-- Address Fields (Initially Hidden) -->
       <div id="address-fields" style="display: none;" class="mb-3">
-        <div class="mb-3">
-          <label for="addressLine1" class="form-label">Address Line 1 <span class="text-danger">*</span></label>
-          <input type="text" class="form-control" id="addressLine1" placeholder="Address Line 1" required>
-        </div>
-        
-        <div class="mb-3">
-          <label for="addressLine2" class="form-label">Address Line 2 <span class="text-danger">*</span></label>
-          <input type="text" class="form-control" id="addressLine2" placeholder="Address Line 2" required>
-        </div>
-        
-        <div class="mb-3">
-          <label for="city" class="form-label">City <span class="text-danger">*</span></label>
-          <input type="text" class="form-control" id="city" placeholder="City" required>
-        </div>
-        
-        <div class="mb-3">
-          <label for="postalCode" class="form-label">Postal Code <span class="text-danger">*</span></label>
-          <input type="text" class="form-control" id="postalCode" placeholder="Postal Code" required>
-        </div>
-        
-        <div class="mb-3">
-          <label for="country" class="form-label">Country <span class="text-danger">*</span></label>
-          <input type="text" class="form-control" id="country" placeholder="Country" required>
-        </div>
+        <div class="mb-3"><label class="form-label">Address Line 1 <span class="text-danger">*</span></label><input type="text" class="form-control" id="addressLine1" required></div>
+        <div class="mb-3"><label class="form-label">Address Line 2 <span class="text-danger">*</span></label><input type="text" class="form-control" id="addressLine2" required></div>
+        <div class="mb-3"><label class="form-label">City <span class="text-danger">*</span></label><input type="text" class="form-control" id="city" required></div>
+        <div class="mb-3"><label class="form-label">Postal Code <span class="text-danger">*</span></label><input type="text" class="form-control" id="postalCode" required></div>
+        <div class="mb-3"><label class="form-label">Country <span class="text-danger">*</span></label><input type="text" class="form-control" id="country" required></div>
       </div>
       
-      <!-- Enter Address Manually Button -->
       <div class="mb-3">
         <button type="button" id="enter-address-manually" class="btn btn-secondary">Enter Address Manually</button>
       </div>
@@ -250,47 +89,40 @@
       <div class="mb-3">
         <h4>Items <span class="text-danger">*</span></h4>
         <div id="items-container">
-          <!-- Initial Item Row -->
           <div class="row mb-2 item">
-            <div class="col-md-4">
-              <input type="text" class="form-control" placeholder="Item Description" required>
-            </div>
             <div class="col-md-3">
-              <input type="number" class="form-control" placeholder="Amount (£)" min="0" step="0.01" required>
-            </div>
-            <div class="col-md-3">
-              <input type="text" class="form-control" placeholder="Image URL (Optional)">
+              <input type="text" class="form-control item-desc" placeholder="Item Description" required>
             </div>
             <div class="col-md-2">
-              <button type="button" class="btn btn-danger remove-item">Remove</button>
+              <input type="number" class="form-control item-amount" placeholder="Amount (£)" min="0" step="0.01" required>
+            </div>
+            <div class="col-md-5">
+              <div class="input-group">
+                <input type="text" class="form-control image-url" placeholder="Paste Image URL">
+                <span class="input-group-text">OR</span>
+                <input type="file" class="form-control image-upload" accept="image/*">
+              </div>
+              <input type="hidden" class="image-base64">
+              <img src="" class="image-preview-thumbnail border mt-1">
+            </div>
+            <div class="col-md-2">
+              <button type="button" class="btn btn-danger remove-item w-100">Remove</button>
             </div>
           </div>
         </div>
         <button type="button" id="add-item" class="btn btn-primary">Add Item</button>
       </div>
       
-      <!-- Courier Details and Payment Instructions -->
+      <!-- Courier & Payment -->
       <div class="mb-3 form-check">
         <input type="checkbox" class="form-check-input" id="includeCourier">
         <label class="form-check-label" for="includeCourier">Include Courier Contact Details</label>
       </div>
       
       <div id="courier-details" style="display: none;" class="mb-3">
-        <div class="mb-3">
-          <label for="courierName" class="form-label">Courier Name <span class="text-danger">*</span></label>
-          <input type="text" class="form-control" id="courierName" placeholder="Enter courier's name">
-        </div>
-        
-        <div class="mb-3">
-          <label for="courierNumber" class="form-label">Courier Number <span class="text-danger">*</span></label>
-          <input type="text" class="form-control" id="courierNumber" placeholder="Enter courier's contact number">
-        </div>
-        
-        <!-- Payment Instructions -->
-        <div class="mb-3">
-          <label for="paymentInstructions" class="form-label">Payment Instructions <span class="text-danger">*</span></label>
-          <textarea class="form-control" id="paymentInstructions" rows="3" placeholder="Enter payment instructions" required></textarea>
-        </div>
+        <div class="mb-3"><label class="form-label">Courier Name <span class="text-danger">*</span></label><input type="text" class="form-control" id="courierName"></div>
+        <div class="mb-3"><label class="form-label">Courier Number <span class="text-danger">*</span></label><input type="text" class="form-control" id="courierNumber"></div>
+        <div class="mb-3"><label class="form-label">Payment Instructions <span class="text-danger">*</span></label><textarea class="form-control" id="paymentInstructions" rows="3" required></textarea></div>
       </div>
       
       <!-- Bank Details -->
@@ -298,37 +130,18 @@
         <h4>Bank Details <span class="text-danger">*</span></h4>
         <div class="form-check">
           <input class="form-check-input" type="radio" name="bankDetails" id="option1" value="option1" checked>
-          <label class="form-check-label" for="option1">
-            Option 1: Mrs Marcia Platts
-          </label>
+          <label class="form-check-label" for="option1">Option 1: Mrs Marcia Platts</label>
         </div>
-        <div id="bank-option1" class="mt-2">
-          <p>
-            Mrs Marcia Platts<br>
-            A/c. 64237273<br>
-            Sort. 01-08-38
-          </p>
-        </div>
+        <div id="bank-option1" class="mt-2"><p>Mrs Marcia Platts<br>A/c. 64237273<br>Sort. 01-08-38</p></div>
         
         <div class="form-check mt-2">
           <input class="form-check-input" type="radio" name="bankDetails" id="option2" value="option2">
-          <label class="form-check-label" for="option2">
-            Option 2: Enter Bank Details Manually
-          </label>
+          <label class="form-check-label" for="option2">Option 2: Enter Bank Details Manually</label>
         </div>
         <div id="bank-option2" class="mt-2" style="display: none;">
-          <div class="mb-3">
-            <label for="accountHolder" class="form-label">Account Holder <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" id="accountHolder" placeholder="Enter account holder's name">
-          </div>
-          <div class="mb-3">
-            <label for="accountNumber" class="form-label">Account Number <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" id="accountNumber" placeholder="Enter account number">
-          </div>
-          <div class="mb-3">
-            <label for="sortCode" class="form-label">Sort Code <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" id="sortCode" placeholder="Enter sort code">
-          </div>
+          <div class="mb-3"><label class="form-label">Account Holder <span class="text-danger">*</span></label><input type="text" class="form-control" id="accountHolder"></div>
+          <div class="mb-3"><label class="form-label">Account Number <span class="text-danger">*</span></label><input type="text" class="form-control" id="accountNumber"></div>
+          <div class="mb-3"><label class="form-label">Sort Code <span class="text-danger">*</span></label><input type="text" class="form-control" id="sortCode"></div>
         </div>
       </div>
       
@@ -338,37 +151,31 @@
         <input type="text" class="form-control" id="footer" placeholder="Enter footer text">
       </div>
       
-      <!-- Generate Invoice & Save/Share Buttons -->
-      <div class="d-flex gap-2">
+      <!-- Action Buttons -->
+      <div class="d-flex gap-2 flex-wrap">
         <button type="button" id="generateInvoice" class="btn btn-success">Generate Invoice</button>
         <button type="button" id="saveInvoice" class="btn btn-info text-white">Save Invoice to History</button>
         <button type="button" id="shareLinkBtn" class="btn btn-warning">Copy Shareable Link</button>
+        <small id="shareWarning" class="text-danger d-none mt-2 w-100">Sharing via URL is disabled because local images are attached (file size too large for URLs).</small>
       </div>
     </form>
     
-    <!-- Invoice History Section -->
+    <!-- History -->
     <div id="history-section" class="mt-5 mb-5">
       <h3>Saved Invoices History</h3>
-      <div id="history-list" class="list-group">
-        <!-- History items will be injected here via JS -->
-      </div>
+      <div id="history-list" class="list-group"></div>
     </div>
 
-    <!-- Hidden Invoice Content for PDF Generation -->
+    <!-- Hidden Content for PDF Generation -->
     <div id="invoice-content" style="display: none;"></div>
   </div>
   
-  <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  
-  <!-- jsPDF and html2canvas Libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   
-  <!-- Combined Custom Script -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Form Elements
       const invoiceForm = document.getElementById('invoice-form');
       const postcodeInput = document.getElementById('postcode');
       const addressSuggestions = document.getElementById('address-suggestions');
@@ -377,36 +184,21 @@
       const addItemButton = document.getElementById('add-item');
       const itemsContainer = document.getElementById('items-container');
       const bankOptions = document.getElementsByName('bankDetails');
-      const bankOption1 = document.getElementById('bank-option1');
-      const bankOption2 = document.getElementById('bank-option2');
       const generateInvoiceButton = document.getElementById('generateInvoice');
-      const includeCourierCheckbox = document.getElementById('includeCourier');
-      const courierDetails = document.getElementById('courier-details');
-      const footerInput = document.getElementById('footer');
-      const paymentInstructionsTextarea = document.getElementById('paymentInstructions');
       const saveInvoiceButton = document.getElementById('saveInvoice');
       const shareLinkBtn = document.getElementById('shareLinkBtn');
       const historyList = document.getElementById('history-list');
       
-      const invoiceNumberField = document.getElementById('invoiceNumber');
-      const invoiceSequenceField = document.getElementById('invoiceSequence');
-      const invoiceDateField = document.getElementById('invoiceDate');
-
-      footerInput.value = "For any inquiries, please contact us at Riddithomes1@gmail.com or call 07713883813.";
+      document.getElementById('footer').value = "For any inquiries, please contact us at Mjplatts@hotmail.co.uk or call 07713883813.";
 
       initializeInvoice();
       postcodeInput.required = true;
-      renderHistory(); // Initialize history
-      checkUrlForData(); // Check if shared via URL
+      renderHistory();
+      checkUrlForData();
 
       function debounce(func, delay) {
-        let debounceTimer;
-        return function() {
-          const context = this;
-          const args = arguments;
-          clearTimeout(debounceTimer);
-          debounceTimer = setTimeout(() => func.apply(context, args), delay);
-        };
+        let timer;
+        return function(...args) { clearTimeout(timer); timer = setTimeout(() => func.apply(this, args), delay); };
       }
 
       function sanitizeHTML(str) {
@@ -417,549 +209,289 @@
 
       function initializeInvoice() {
         const today = new Date();
-        const yyyy = today.getFullYear();
-        const mm = String(today.getMonth() + 1).padStart(2, '0');
-        const dd = String(today.getDate()).padStart(2, '0');
-        const formattedDate = `${dd}/${mm}/${yyyy}`;
-        invoiceDateField.value = formattedDate;
+        const formattedDate = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
+        document.getElementById('invoiceDate').value = formattedDate;
 
-        const dateForInvoice = `${yyyy}${mm}${dd}`;
-        const invoicePrefix = `INV-${dateForInvoice}-`;
-        invoiceNumberField.value = invoicePrefix;
+        const prefix = `INV-${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}-`;
+        document.getElementById('invoiceNumber').value = prefix;
 
-        const lastSequence = localStorage.getItem(`invoiceSequence-${dateForInvoice}`);
-        let sequenceNumber = 1;
-        if (lastSequence) {
-          const parsedSequence = parseInt(lastSequence, 10);
-          if (!isNaN(parsedSequence)) {
-            sequenceNumber = parsedSequence + 1;
-          }
-        }
-        const formattedSequence = String(sequenceNumber).padStart(3, '0');
-        invoiceSequenceField.value = formattedSequence;
-        localStorage.setItem(`invoiceSequence-${dateForInvoice}`, formattedSequence);
+        let seq = parseInt(localStorage.getItem(`invoiceSeq-${prefix}`) || '1', 10);
+        document.getElementById('invoiceSequence').value = String(seq).padStart(3, '0');
       }
 
-      postcodeInput.addEventListener('input', debounce(handlePostcodeInput, 300));
-
-      function handlePostcodeInput(event) {
-        const term = event.target.value.trim();
-        if (term.length < 3) {
-          addressSuggestions.innerHTML = '';
-          addressSuggestions.style.display = 'none';
-          addressFields.style.display = 'none';
-          postcodeInput.required = true;
-          return;
-        }
+      postcodeInput.addEventListener('input', debounce((e) => {
+        const term = e.target.value.trim();
+        if (term.length < 3) return addressSuggestions.style.display = 'none';
 
         fetch(`https://api.getaddress.io/autocomplete/${encodeURIComponent(term)}?api-key=fh7uRcMyDEmfFGo0Cd0wYw46781`)
-          .then(response => {
-            if (!response.ok) throw new Error(`API request failed with status ${response.status}`);
-            return response.json();
-          })
+          .then(res => res.json())
           .then(data => {
-            if (data.suggestions && Array.isArray(data.suggestions)) {
-              displaySuggestions(data.suggestions);
-            } else if (data.Message) {
-              throw new Error(`API Error: ${data.Message}`);
-            }
-          })
-          .catch(error => {
-            addressSuggestions.innerHTML = `<div class="list-group-item text-danger">Error: ${error.message}</div>`;
+            addressSuggestions.innerHTML = '';
+            (data.suggestions || []).forEach(sug => {
+              const btn = document.createElement('button');
+              btn.className = 'list-group-item list-group-item-action';
+              btn.textContent = sug.address;
+              btn.onclick = () => {
+                const parts = sug.address.split(',').map(p => p.trim());
+                document.getElementById('addressLine1').value = parts[0] || '';
+                document.getElementById('addressLine2').value = parts[1] || '';
+                document.getElementById('city').value = parts[2] || '';
+                document.getElementById('postalCode').value = parts[parts.length - 1] || '';
+                document.getElementById('country').value = 'United Kingdom';
+                addressFields.style.display = 'block';
+                addressSuggestions.style.display = 'none';
+              };
+              addressSuggestions.appendChild(btn);
+            });
             addressSuggestions.style.display = 'block';
           });
-      }
-
-      function displaySuggestions(suggestions) {
-        addressSuggestions.innerHTML = '';
-        if (!suggestions || suggestions.length === 0) {
-          addressSuggestions.innerHTML = `<div class="list-group-item">No addresses found.</div>`;
-        } else {
-          suggestions.forEach(suggestion => {
-            const item = document.createElement('button');
-            item.type = 'button';
-            item.classList.add('list-group-item', 'list-group-item-action');
-            item.textContent = suggestion.address;
-            item.addEventListener('click', () => populateAddressFields(suggestion.address));
-            addressSuggestions.appendChild(item);
-          });
-        }
-        addressSuggestions.style.display = 'block';
-      }
-
-      function populateAddressFields(address) {
-        const addressParts = address.split(',').map(part => part.trim());
-        document.getElementById('addressLine1').value = addressParts[0] || '';
-        document.getElementById('addressLine2').value = addressParts[1] || '';
-        document.getElementById('city').value = addressParts[2] || '';
-        document.getElementById('postalCode').value = addressParts[addressParts.length - 1] || '';
-        document.getElementById('country').value = 'United Kingdom';
-        
-        addressFields.style.display = 'block';
-        ['addressLine1', 'addressLine2', 'city', 'postalCode', 'country'].forEach(id => {
-          const field = document.getElementById(id);
-          field.readOnly = true;
-          field.required = true;
-        });
-        
-        postcodeInput.required = false;
-        addressSuggestions.style.display = 'none';
-      }
+      }, 300));
 
       enterAddressManuallyButton.addEventListener('click', () => {
         addressFields.style.display = 'block';
         postcodeInput.style.display = 'none';
         addressSuggestions.style.display = 'none';
-        postcodeInput.required = false;
-        postcodeInput.value = '';
-        ['addressLine1', 'addressLine2', 'city', 'postalCode', 'country'].forEach(id => {
-          const field = document.getElementById(id);
-          field.readOnly = false;
-          field.required = true;
-        });
       });
 
       addItemButton.addEventListener('click', () => {
-        const itemRow = document.createElement('div');
-        itemRow.classList.add('row', 'mb-2', 'item');
-        itemRow.innerHTML = `
-          <div class="col-md-4">
-            <input type="text" class="form-control" placeholder="Item Description" required>
+        const row = document.createElement('div');
+        row.className = 'row mb-2 item';
+        row.innerHTML = `
+          <div class="col-md-3"><input type="text" class="form-control item-desc" placeholder="Item Description" required></div>
+          <div class="col-md-2"><input type="number" class="form-control item-amount" placeholder="Amount (£)" min="0" step="0.01" required></div>
+          <div class="col-md-5">
+            <div class="input-group">
+              <input type="text" class="form-control image-url" placeholder="Paste Image URL">
+              <span class="input-group-text">OR</span>
+              <input type="file" class="form-control image-upload" accept="image/*">
+            </div>
+            <input type="hidden" class="image-base64">
+            <img src="" class="image-preview-thumbnail border mt-1">
           </div>
-          <div class="col-md-3">
-            <input type="number" class="form-control" placeholder="Amount (£)" min="0" step="0.01" required>
-          </div>
-          <div class="col-md-3">
-            <input type="text" class="form-control" placeholder="Image URL (Optional)">
-          </div>
-          <div class="col-md-2">
-            <button type="button" class="btn btn-danger remove-item">Remove</button>
-          </div>
+          <div class="col-md-2"><button type="button" class="btn btn-danger remove-item w-100">Remove</button></div>
         `;
-        itemsContainer.appendChild(itemRow);
+        itemsContainer.appendChild(row);
       });
 
       itemsContainer.addEventListener('click', (e) => {
-        if (e.target && e.target.classList.contains('remove-item')) {
-          e.target.closest('.item').remove();
+        if (e.target.classList.contains('remove-item')) e.target.closest('.item').remove();
+      });
+
+      // Local Image Upload & Compression via Canvas
+      itemsContainer.addEventListener('change', (e) => {
+        if (e.target.classList.contains('image-upload')) {
+          const file = e.target.files[0];
+          if (!file) return;
+
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            const img = new Image();
+            img.onload = function() {
+              // Canvas Compression (shrinks to 200px max width to fit in cache limits)
+              const canvas = document.createElement('canvas');
+              const MAX_WIDTH = 200;
+              const scale = Math.min(MAX_WIDTH / img.width, 1); // Don't scale up small images
+              canvas.width = img.width * scale;
+              canvas.height = img.height * scale;
+
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+              // Compress to JPEG at 70% quality
+              const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+              
+              const parent = e.target.closest('.col-md-5');
+              parent.querySelector('.image-base64').value = compressedBase64;
+              const preview = parent.querySelector('.image-preview-thumbnail');
+              preview.src = compressedBase64;
+              preview.style.display = 'block';
+
+              // Disable URL Sharing to prevent crash
+              document.getElementById('shareLinkBtn').disabled = true;
+              document.getElementById('shareWarning').classList.remove('d-none');
+            };
+            img.src = event.target.result;
+          };
+          reader.readAsDataURL(file);
         }
       });
 
-      bankOptions.forEach(option => {
-        option.addEventListener('change', () => {
-          if (option.value === 'option1') {
-            bankOption1.style.display = 'block';
-            bankOption2.style.display = 'none';
-            document.querySelectorAll('#bank-option2 input').forEach(input => input.required = false);
-          } else {
-            bankOption1.style.display = 'none';
-            bankOption2.style.display = 'block';
-            document.querySelectorAll('#bank-option2 input').forEach(input => input.required = true);
-          }
-        });
+      bankOptions.forEach(opt => opt.addEventListener('change', (e) => {
+        document.getElementById('bank-option1').style.display = e.target.value === 'option1' ? 'block' : 'none';
+        document.getElementById('bank-option2').style.display = e.target.value === 'option2' ? 'block' : 'none';
+      }));
+
+      document.getElementById('includeCourier').addEventListener('change', (e) => {
+        document.getElementById('courier-details').style.display = e.target.checked ? 'block' : 'none';
       });
 
-      includeCourierCheckbox.addEventListener('change', () => {
-        if (includeCourierCheckbox.checked) {
-          courierDetails.style.display = 'block';
-          document.getElementById('courierName').required = true;
-          document.getElementById('courierNumber').required = true;
-          document.getElementById('paymentInstructions').required = true;
-        } else {
-          courierDetails.style.display = 'none';
-          document.getElementById('courierName').required = false;
-          document.getElementById('courierNumber').required = false;
-          document.getElementById('paymentInstructions').required = false;
-          document.getElementById('courierName').value = '';
-          document.getElementById('courierNumber').value = '';
-          document.getElementById('paymentInstructions').value = '';
-        }
-      });
-
-      /* ------ NEW FEATURE: Gather Data Object ------ */
       function collectFormData() {
         const data = {
-          invoiceSequence: document.getElementById('invoiceSequence').value,
-          invoiceToName: document.getElementById('invoiceToName').value,
-          invoiceEmail: document.getElementById('invoiceEmail').value,
-          addressLine1: document.getElementById('addressLine1').value,
-          addressLine2: document.getElementById('addressLine2').value,
+          seq: document.getElementById('invoiceSequence').value,
+          toName: document.getElementById('invoiceToName').value,
+          email: document.getElementById('invoiceEmail').value,
+          addr1: document.getElementById('addressLine1').value,
+          addr2: document.getElementById('addressLine2').value,
           city: document.getElementById('city').value,
-          postalCode: document.getElementById('postalCode').value,
+          post: document.getElementById('postalCode').value,
           country: document.getElementById('country').value,
-          includeCourier: document.getElementById('includeCourier').checked,
-          courierName: document.getElementById('courierName').value,
-          courierNumber: document.getElementById('courierNumber').value,
-          paymentInstructions: document.getElementById('paymentInstructions').value,
+          incCourier: document.getElementById('includeCourier').checked,
+          cName: document.getElementById('courierName').value,
+          cNum: document.getElementById('courierNumber').value,
+          payInst: document.getElementById('paymentInstructions').value,
           footer: document.getElementById('footer').value,
-          timestamp: new Date().getTime(),
           items: []
         };
+        
         document.querySelectorAll('.item').forEach(item => {
-          const description = item.querySelector('input[type="text"][placeholder="Item Description"]').value;
-          const amount = item.querySelector('input[type="number"][placeholder="Amount (£)"]').value;
-          const imageUrl = item.querySelector('input[type="text"][placeholder="Image URL (Optional)"]').value;
-          if (description || amount) {
-            data.items.push({ description, amount, imageUrl });
-          }
+          const desc = item.querySelector('.item-desc').value;
+          const amt = item.querySelector('.item-amount').value;
+          const url = item.querySelector('.image-url').value;
+          const b64 = item.querySelector('.image-base64').value;
+          
+          if (desc || amt) data.items.push({ desc, amt, img: b64 || url });
         });
         return data;
       }
 
-      /* ------ NEW FEATURE: URL Sharing  ------ */
       shareLinkBtn.addEventListener('click', () => {
-        const invoiceData = collectFormData();
-        const jsonString = JSON.stringify(invoiceData);
-        const base64Data = btoa(encodeURIComponent(jsonString)); // Safely encode data
-        const shareableUrl = window.location.origin + window.location.pathname + '#' + base64Data;
-        
-        navigator.clipboard.writeText(shareableUrl).then(() => {
-          alert('Shareable link copied to clipboard! You can share this URL to load the same invoice data elsewhere.');
-        }).catch(err => {
-          console.error('Failed to copy: ', err);
-          alert('Failed to copy link.');
-        });
+        try {
+          const b64 = btoa(encodeURIComponent(JSON.stringify(collectFormData())));
+          navigator.clipboard.writeText(window.location.href.split('#')[0] + '#' + b64);
+          alert('Link copied!');
+        } catch(e) { alert('Data too large for URL.'); }
       });
 
       function checkUrlForData() {
-        if(window.location.hash && window.location.hash.length > 5) {
+        if(window.location.hash.length > 5) {
           try {
-            const hashData = window.location.hash.substring(1);
-            const decodedData = JSON.parse(decodeURIComponent(atob(hashData)));
-            loadInvoiceData(decodedData);
-            window.location.hash = ''; // Clear hash after load
-          } catch(e) {
-            console.error("Could not parse URL data", e);
-          }
+            const data = JSON.parse(decodeURIComponent(atob(window.location.hash.substring(1))));
+            loadInvoiceData(data);
+            window.location.hash = '';
+          } catch(e) {}
         }
       }
 
-      /* ------ NEW FEATURE: Save & History ------ */
       saveInvoiceButton.addEventListener('click', () => {
-        const invoiceData = collectFormData();
-        invoiceData.fullInvoiceNum = document.getElementById('invoiceNumber').value + invoiceData.invoiceSequence;
-        invoiceData.displayDate = document.getElementById('invoiceDate').value;
+        const data = collectFormData();
+        data.fullNum = document.getElementById('invoiceNumber').value + data.seq;
+        data.date = document.getElementById('invoiceDate').value;
         
-        let history = JSON.parse(localStorage.getItem('invoiceHistory')) || [];
-        history.push(invoiceData);
-        localStorage.setItem('invoiceHistory', JSON.stringify(history));
-        
-        alert('Invoice successfully saved to history!');
-        renderHistory();
+        let hist = JSON.parse(localStorage.getItem('invHist')) || [];
+        try {
+          hist.push(data);
+          localStorage.setItem('invHist', JSON.stringify(hist));
+          alert('Saved!');
+          renderHistory();
+        } catch (e) {
+          alert('Storage full! You have saved too many images. Please delete old history.');
+        }
       });
 
       function renderHistory() {
-        let history = JSON.parse(localStorage.getItem('invoiceHistory')) || [];
+        let hist = JSON.parse(localStorage.getItem('invHist')) || [];
         historyList.innerHTML = '';
-        if(history.length === 0) {
-          historyList.innerHTML = '<div class="list-group-item text-muted">No saved invoices on this device.</div>';
-          return;
-        }
-
-        history.slice().reverse().forEach((data, index) => {
-          const item = document.createElement('button');
-          item.type = 'button';
-          item.classList.add('list-group-item', 'list-group-item-action', 'd-flex', 'justify-content-between', 'align-items-center');
-          item.innerHTML = `<span><strong>${data.fullInvoiceNum || 'Draft'}</strong> - To: ${data.invoiceToName || 'Unknown'} (${data.displayDate || 'No Date'})</span>`;
-          
-          const loadBtn = document.createElement('span');
-          loadBtn.classList.add('badge', 'bg-primary', 'rounded-pill');
-          loadBtn.textContent = 'Load Data';
-          
-          item.appendChild(loadBtn);
-          item.addEventListener('click', () => loadInvoiceData(data));
-          historyList.appendChild(item);
+        hist.slice().reverse().forEach(data => {
+          const btn = document.createElement('button');
+          btn.className = 'list-group-item list-group-item-action d-flex justify-content-between';
+          btn.innerHTML = `<span><strong>${data.fullNum}</strong> - ${data.toName} (${data.date})</span><span class="badge bg-primary rounded-pill">Load</span>`;
+          btn.onclick = () => loadInvoiceData(data);
+          historyList.appendChild(btn);
         });
       }
 
       function loadInvoiceData(data) {
-        document.getElementById('invoiceSequence').value = data.invoiceSequence || '';
-        document.getElementById('invoiceToName').value = data.invoiceToName || '';
-        document.getElementById('invoiceEmail').value = data.invoiceEmail || '';
-        
-        if (data.addressLine1 || data.city) {
-          addressFields.style.display = 'block';
-          postcodeInput.style.display = 'none';
-          document.getElementById('addressLine1').value = data.addressLine1 || '';
-          document.getElementById('addressLine2').value = data.addressLine2 || '';
-          document.getElementById('city').value = data.city || '';
-          document.getElementById('postalCode').value = data.postalCode || '';
-          document.getElementById('country').value = data.country || '';
-          ['addressLine1', 'addressLine2', 'city', 'postalCode', 'country'].forEach(id => {
-            const field = document.getElementById(id);
-            field.readOnly = false;
-            field.required = true;
-          });
-          postcodeInput.required = false;
+        document.getElementById('invoiceSequence').value = data.seq || '';
+        document.getElementById('invoiceToName').value = data.toName || '';
+        document.getElementById('invoiceEmail').value = data.email || '';
+        if(data.addr1) {
+          document.getElementById('address-fields').style.display = 'block';
+          document.getElementById('postcode').style.display = 'none';
+          document.getElementById('addressLine1').value = data.addr1;
+          document.getElementById('addressLine2').value = data.addr2;
+          document.getElementById('city').value = data.city;
+          document.getElementById('postalCode').value = data.post;
+          document.getElementById('country').value = data.country;
         }
-
-        document.getElementById('includeCourier').checked = data.includeCourier || false;
-        if (data.includeCourier) {
-          courierDetails.style.display = 'block';
-        } else {
-          courierDetails.style.display = 'none';
-        }
+        document.getElementById('includeCourier').checked = data.incCourier;
+        document.getElementById('courier-details').style.display = data.incCourier ? 'block' : 'none';
+        document.getElementById('courierName').value = data.cName || '';
+        document.getElementById('courierNumber').value = data.cNum || '';
+        document.getElementById('paymentInstructions').value = data.payInst || '';
         
-        document.getElementById('courierName').value = data.courierName || '';
-        document.getElementById('courierNumber').value = data.courierNumber || '';
-        document.getElementById('paymentInstructions').value = data.paymentInstructions || '';
-        if (data.footer) document.getElementById('footer').value = data.footer;
-
-        // Clear and reload items
         itemsContainer.innerHTML = '';
-        if(data.items && data.items.length > 0) {
-          data.items.forEach(itemData => {
-            const itemRow = document.createElement('div');
-            itemRow.classList.add('row', 'mb-2', 'item');
-            itemRow.innerHTML = `
-              <div class="col-md-4">
-                <input type="text" class="form-control" placeholder="Item Description" value="${itemData.description || ''}" required>
-              </div>
-              <div class="col-md-3">
-                <input type="number" class="form-control" placeholder="Amount (£)" min="0" step="0.01" value="${itemData.amount || ''}" required>
-              </div>
-              <div class="col-md-3">
-                <input type="text" class="form-control" placeholder="Image URL (Optional)" value="${itemData.imageUrl || ''}">
-              </div>
-              <div class="col-md-2">
-                <button type="button" class="btn btn-danger remove-item">Remove</button>
-              </div>
-            `;
-            itemsContainer.appendChild(itemRow);
+        if(data.items.length) {
+          data.items.forEach(i => {
+            document.getElementById('add-item').click();
+            const last = itemsContainer.lastElementChild;
+            last.querySelector('.item-desc').value = i.desc;
+            last.querySelector('.item-amount').value = i.amt;
+            // Differentiate between base64 cache image and url
+            if (i.img && i.img.startsWith('data:image')) {
+               last.querySelector('.image-base64').value = i.img;
+               const preview = last.querySelector('.image-preview-thumbnail');
+               preview.src = i.img;
+               preview.style.display = 'block';
+            } else {
+               last.querySelector('.image-url').value = i.img || '';
+            }
           });
-        } else {
-          addItemButton.click();
         }
-        
-        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
-      /* ------ Original PDF Generation Logic ------ */
-      generateInvoiceButton.addEventListener('click', () => {
-        const requiredFields = Array.from(invoiceForm.querySelectorAll('[required]')).filter(field => {
-          return field.offsetParent !== null;
-        });
+      generateInvoiceButton.addEventListener('click', async () => {
+        const data = collectFormData();
+        const invNum = document.getElementById('invoiceNumber').value + data.seq;
+        
+        let bankHtml = document.getElementById('option1').checked 
+          ? `Mrs Marcia Platts<br>A/c. 64237273<br>Sort. 01-08-38` 
+          : `${sanitizeHTML(document.getElementById('accountHolder').value)}<br>A/c. ${sanitizeHTML(document.getElementById('accountNumber').value)}<br>Sort. ${sanitizeHTML(document.getElementById('sortCode').value)}`;
 
-        const invalidFields = requiredFields.filter(field => !field.checkValidity()).map(field => {
-          const label = invoiceForm.querySelector(`label[for="${field.id}"]`);
-          if (label) {
-            return label.textContent.replace(' *', '').trim();
-          }
-          return field.placeholder || field.name || 'Unnamed Field';
-        });
-
-        if (invalidFields.length > 0) {
-          const message = `Please fill in the following required fields:\n- ${invalidFields.join('\n- ')}`;
-          alert(message);
-          const firstInvalidField = requiredFields.find(field => !field.checkValidity());
-          if (firstInvalidField) {
-            firstInvalidField.focus();
-          }
-          return;
-        }
-
-        const invoiceToName = document.getElementById('invoiceToName').value.trim();
-        const invoiceEmail = document.getElementById('invoiceEmail').value.trim();
-        const addressLine1 = document.getElementById('addressLine1').value.trim();
-        const addressLine2 = document.getElementById('addressLine2').value.trim();
-        const city = document.getElementById('city').value.trim();
-        const postalCode = document.getElementById('postalCode').value.trim();
-        const country = document.getElementById('country').value.trim();
-
-        const items = [];
-        let itemsValid = true;
-        document.querySelectorAll('.item').forEach(item => {
-          const description = item.querySelector('input[type="text"][placeholder="Item Description"]').value.trim();
-          const amount = item.querySelector('input[type="number"][placeholder="Amount (£)"]').value.trim();
-          const imageUrl = item.querySelector('input[type="text"][placeholder="Image URL (Optional)"]').value.trim();
-
-          if (description === '' || amount === '') {
-            itemsValid = false;
-          }
-          items.push({ description, amount, imageUrl });
-        });
-
-        if (!itemsValid || items.length === 0) {
-          alert('Please fill in all item descriptions and amounts.');
-          return;
-        }
-
-        let paymentInstructions = '';
-        let courierName = '';
-        let courierNumber = '';
-        if (includeCourierCheckbox.checked) {
-          courierName = document.getElementById('courierName').value.trim();
-          courierNumber = document.getElementById('courierNumber').value.trim();
-          paymentInstructions = paymentInstructionsTextarea.value.trim();
-        }
-
-        let bankDetails = '';
-        if (document.getElementById('option1').checked) {
-          bankDetails = `
-            Mrs Marcia Platts<br>
-            A/c. 64237273<br>
-            Sort. 01-08-38
-          `;
-        } else {
-          const accountHolder = document.getElementById('accountHolder').value.trim();
-          const accountNumber = document.getElementById('accountNumber').value.trim();
-          const sortCode = document.getElementById('sortCode').value.trim();
-
-          if (accountHolder === '' || accountNumber === '' || sortCode === '') {
-            alert('Please fill in all bank details for Option 2.');
-            return;
-          }
-
-          bankDetails = `
-            ${sanitizeHTML(accountHolder)}<br>
-            A/c. ${sanitizeHTML(accountNumber)}<br>
-            Sort. ${sanitizeHTML(sortCode)}
-          `;
-        }
-
-        const footer = footerInput.value.trim();
-        const invoiceNumberPrefix = invoiceNumberField.value;
-        let invoiceSequence = invoiceSequenceField.value.trim();
-
-        const sequenceNumberInt = parseInt(invoiceSequence, 10);
-        if (isNaN(sequenceNumberInt) || sequenceNumberInt < 1 || sequenceNumberInt > 999) {
-          alert('Please enter a valid sequence number between 001 and 999.');
-          invoiceSequenceField.focus();
-          return;
-        }
-
-        invoiceSequence = String(sequenceNumberInt).padStart(3, '0');
-        const invoiceNumber = `${invoiceNumberPrefix}${invoiceSequence}`;
-        invoiceNumberField.value = invoiceNumber;
-
-        const dateForInvoice = invoiceNumberPrefix.split('-')[1];
-        localStorage.setItem(`invoiceSequence-${dateForInvoice}`, invoiceSequence);
-
-        const invoiceHTML = `
+        const html = `
           <div class="p-4 invoice-pdf-content">
-            <div class="text-center mb-4">
-              <img src="https://raw.githubusercontent.com/hugh-platts/riddit-invoice-generator/main/darklogo2.png" alt="Company Logo" class="invoice-logo">
-            </div>
+            <div class="text-center mb-4"><img src="https://raw.githubusercontent.com/hugh-platts/riddit-invoice-generator/main/darklogo2.png" class="invoice-logo" crossorigin="anonymous"></div>
             <h2>Invoice</h2>
-            <p><strong>Invoice Number:</strong> ${sanitizeHTML(invoiceNumber)}</p>
-            <p><strong>Invoice Date:</strong> ${sanitizeHTML(invoiceDateField.value)}</p>
-            <p><strong>Invoice To:</strong> ${sanitizeHTML(invoiceToName)}</p>
-            <p><strong>Address:</strong><br>
-              ${sanitizeHTML(addressLine1)}<br>
-              ${sanitizeHTML(addressLine2)}<br>
-              ${sanitizeHTML(city)}, ${sanitizeHTML(postalCode)}<br>
-              ${sanitizeHTML(country)}
-            </p>
-            <p><strong>Email:</strong> ${sanitizeHTML(invoiceEmail)}</p>
+            <p><strong>Invoice Number:</strong> ${sanitizeHTML(invNum)}</p>
+            <p><strong>Date:</strong> ${sanitizeHTML(document.getElementById('invoiceDate').value)}</p>
+            <p><strong>To:</strong> ${sanitizeHTML(data.toName)}<br>${sanitizeHTML(data.addr1)}<br>${sanitizeHTML(data.city)}, ${sanitizeHTML(data.post)}</p>
             
             <h4>Items</h4>
             <table>
-              <thead>
-                <tr>
-                  <th>Description</th>
-                  <th>Amount (£)</th>
-                  <th>Image</th>
-                </tr>
-              </thead>
+              <thead><tr><th>Description</th><th>Amount (£)</th><th>Image</th></tr></thead>
               <tbody>
-                ${items.map(item => `
-                  <tr>
-                    <td>${sanitizeHTML(item.description)}</td>
-                    <td>${parseFloat(item.amount).toFixed(2)}</td>
-                    <td>${item.imageUrl ? `<img src="${sanitizeHTML(item.imageUrl)}" alt="Item Image" class="item-image" crossorigin="anonymous">` : 'N/A'}</td>
-                  </tr>
-                `).join('')}
+                ${data.items.map(i => `<tr><td>${sanitizeHTML(i.desc)}</td><td>${parseFloat(i.amt).toFixed(2)}</td><td>${i.img ? `<img src="${i.img}" class="item-image" crossorigin="anonymous">` : 'N/A'}</td></tr>`).join('')}
               </tbody>
             </table>
             
-            ${includeCourierCheckbox.checked && paymentInstructions ? `<h4>Payment Instructions</h4><p>${sanitizeHTML(paymentInstructions)}</p>` : ''}
+            ${data.incCourier ? `<h4>Courier Contact</h4><p>Name: ${sanitizeHTML(data.cName)}<br>Number: ${sanitizeHTML(data.cNum)}<br>Instructions: ${sanitizeHTML(data.payInst)}</p>` : ''}
             
-            ${courierName || courierNumber ? `
-              <h4>Courier Contact Details</h4>
-              <p>Name: ${sanitizeHTML(courierName)}</p>
-              <p>Number: ${sanitizeHTML(courierNumber)}</p>
-            ` : ''}
-            
-            <h4>Bank Details</h4>
-            <p>${bankDetails}</p>
-            
-            <h4>Regards</h4>
-            <p>Thank you for your business!<br>Marcia<br>(Riddit Homes)</p>
-            
-            <footer class="mt-4">
-              <p>${sanitizeHTML(footer)}</p>
-            </footer>
+            <h4>Bank Details</h4><p>${bankHtml}</p>
+            <footer><p>${sanitizeHTML(data.footer)}</p></footer>
           </div>
         `;
+        
+        const container = document.getElementById('invoice-content');
+        container.innerHTML = html;
+        container.style.display = 'block';
 
-        const invoiceContainer = document.getElementById('invoice-content');
-        if (!invoiceContainer) {
-          console.error('Element with ID "invoice-content" not found.');
-          return;
-        }
-        invoiceContainer.innerHTML = invoiceHTML;
-        invoiceContainer.style.display = 'block'; 
-
-        generatePDF(invoiceToName, invoiceNumber);
-      });
-
-      async function generatePDF(recipientName, invoiceNumber) {
         const { jsPDF } = window.jspdf;
-        const invoiceContent = document.querySelector('.invoice-pdf-content');
-
-        if (!invoiceContent) {
-          console.error('Invoice content element not found.');
-          return;
-        }
-
-        const loadingIndicator = document.createElement('div');
-        loadingIndicator.id = 'loading-indicator';
-        loadingIndicator.innerHTML = `
-          <div class="d-flex align-items-center">
-            <strong>Generating PDF...</strong>
-            <div class="spinner-border ms-3" role="status" aria-hidden="true"></div>
-          </div>
-        `;
-        loadingIndicator.style.position = 'fixed';
-        loadingIndicator.style.top = '50%';
-        loadingIndicator.style.left = '50%';
-        loadingIndicator.style.transform = 'translate(-50%, -50%)';
-        loadingIndicator.style.backgroundColor = '#fff';
-        loadingIndicator.style.padding = '20px';
-        loadingIndicator.style.border = '1px solid #333';
-        loadingIndicator.style.zIndex = '1000';
-        document.body.appendChild(loadingIndicator);
-
-        try {
-          const pdf = new jsPDF('p', 'mm', 'a4');
-          const options = {
-            scale: 0.27, 
-            useCORS: true,
-            logging: true,
-            windowWidth: invoiceContent.scrollWidth,
-            windowHeight: invoiceContent.scrollHeight,
-          };
-
-          await pdf.html(invoiceContent, {
-            callback: function (pdfDoc) {
-              const sanitizedRecipientName = recipientName.replace(/[^a-z0-9]/gi, '_');
-              const filename = `${sanitizedRecipientName}_${invoiceNumber}.pdf`;
-              pdfDoc.save(filename);
-            },
-            x: 10,
-            y: 10,
-            width: 190,
-            windowWidth: invoiceContent.scrollWidth,
-            html2canvas: options,
-          });
-        } catch (error) {
-          console.error('Error generating PDF:', error);
-          alert('There was an error generating the PDF. Please try again.');
-        } finally {
-          document.body.removeChild(loadingIndicator);
-          invoiceContent.style.display = 'none';
-        }
-      }
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        
+        // --- ADDED MARGINS FOR PAGE 2 SPACING ---
+        await pdf.html(container.querySelector('.invoice-pdf-content'), {
+          callback: function (doc) {
+            doc.save(`${data.toName.replace(/[^a-z0-9]/gi, '_')}_${invNum}.pdf`);
+          },
+          margin: [15, 15, 15, 15], // 15mm spacing around the PDF page
+          autoPaging: 'text', // Smart pagination to prevent slice cuts
+          x: 0,
+          y: 0,
+          width: 180, // A4 width (210) minus left/right margins (30)
+          windowWidth: container.scrollWidth
+        });
+        
+        container.style.display = 'none';
+      });
     });
   </script>
 </body>
