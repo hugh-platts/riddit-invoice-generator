@@ -8,25 +8,37 @@
   <style>
     body { background-color: #f8f9fa; font-family: Arial, sans-serif; margin: 0; padding: 0; }
     #invoice-content { display: none; }
-    .invoice-pdf-content { width: 700px; background-color: #fff; padding: 20px; border: 1px solid #333; }
-    .invoice-pdf-content .invoice-logo { width: 150px; max-width: 100%; height: auto; display: block; margin: 0 auto 20px auto; }
-    .invoice-pdf-content h2 { text-align: center; margin-bottom: 20px; font-size: 2em; }
-    .invoice-pdf-content h4 { margin-top: 30px; margin-bottom: 10px; font-size: 1.5em; }
-    .invoice-pdf-content table { width: 100%; border-collapse: collapse; margin-bottom: 20px; page-break-inside: auto; }
-    .invoice-pdf-content table, .invoice-pdf-content th, .invoice-pdf-content td { border: 1px solid #333; }
-    .invoice-pdf-content th, .invoice-pdf-content td { padding: 8px; text-align: left; vertical-align: top; page-break-inside: avoid; page-break-after: auto; }
+    
+    /* PDF Specific Styling - Compacted for >10 items and Single Page focus */
+    .invoice-pdf-content { width: 700px; background-color: #fff; padding: 20px; border: 1px solid #333; font-size: 13px; color: #000; }
+    .invoice-pdf-content .invoice-logo { width: 120px; max-width: 100%; height: auto; display: block; margin: 0 auto 15px auto; }
+    .invoice-pdf-content h2 { text-align: center; margin-bottom: 15px; font-size: 1.8em; }
+    .invoice-pdf-content h4 { margin-top: 15px; margin-bottom: 5px; font-size: 1.2em; border-bottom: 1px solid #eee; padding-bottom: 3px;}
+    
+    /* Table Styling */
+    .invoice-pdf-content table { width: 100%; border-collapse: collapse; margin-bottom: 15px; page-break-inside: auto; }
+    .invoice-pdf-content table, .invoice-pdf-content th, .invoice-pdf-content td { border: 1px solid #666; }
+    .invoice-pdf-content th, .invoice-pdf-content td { padding: 4px 6px; text-align: left; vertical-align: middle; page-break-inside: avoid; page-break-after: auto; }
     .invoice-pdf-content tr { page-break-inside: avoid; page-break-after: auto; }
-    .invoice-pdf-content th { background-color: #f2f2f2; }
-    .invoice-pdf-content .item-image { max-width: 100px; max-height: 100px; object-fit: contain; }
-    .invoice-pdf-content footer { text-align: center; font-size: 0.9em; color: #555; margin-top: 40px; border-top: 1px solid #ccc; padding-top: 10px; }
+    .invoice-pdf-content th { background-color: #f2f2f2; font-weight: bold; }
+    .invoice-pdf-content .item-image { max-width: 60px; max-height: 60px; object-fit: contain; }
+    
+    /* Totals Box */
+    .invoice-totals-box { text-align: right; margin-top: 10px; margin-bottom: 20px; page-break-inside: avoid; }
+    .invoice-totals-box p { margin: 2px 0; font-size: 1.1em; }
+    .invoice-totals-box h3 { margin: 5px 0 0 0; font-size: 1.4em; font-weight: bold; }
+
+    /* Footer Sections */
+    .invoice-footer-grid { display: flex; justify-content: space-between; gap: 20px; page-break-inside: avoid; margin-bottom: 20px;}
+    .invoice-footer-grid > div { flex: 1; }
+    .invoice-pdf-content footer { text-align: center; font-size: 0.9em; color: #555; margin-top: 20px; border-top: 1px solid #ccc; padding-top: 10px; page-break-inside: avoid; }
+    .invoice-pdf-content p { line-height: 1.4; margin-bottom: 5px; }
+    
+    /* UI Styling */
     #address-suggestions { position: absolute; z-index: 1000; width: 100%; max-height: 200px; overflow-y: auto; background-color: #fff; border: 1px solid #ced4da; border-top: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
     #address-suggestions .list-group-item { cursor: pointer; }
     #address-suggestions .list-group-item:hover { background-color: #e9ecef; }
     .position-relative { position: relative; }
-    .invoice-pdf-content h2, .invoice-pdf-content h4 { page-break-after: avoid; page-break-inside: avoid; }
-    .invoice-pdf-content p { line-height: 1.6; }
-    .invoice-pdf-content strong { font-weight: bold; }
-    .btn { cursor: pointer; }
     .image-preview-thumbnail { max-width: 50px; max-height: 50px; margin-top: 5px; display: none; }
   </style>
 </head>
@@ -82,35 +94,31 @@
       </div>
       
       <div class="mb-3">
-        <button type="button" id="enter-address-manually" class="btn btn-secondary">Enter Address Manually</button>
+        <button type="button" id="enter-address-manually" class="btn btn-secondary btn-sm">Enter Address Manually</button>
       </div>
       
       <!-- Items Section -->
-      <div class="mb-3">
+      <div class="mb-3 p-3 border rounded bg-light">
         <h4>Items <span class="text-danger">*</span></h4>
         <div id="items-container">
-          <div class="row mb-2 item">
-            <div class="col-md-3">
-              <input type="text" class="form-control item-desc" placeholder="Item Description" required>
-            </div>
-            <div class="col-md-2">
-              <input type="number" class="form-control item-amount" placeholder="Amount (£)" min="0" step="0.01" required>
-            </div>
-            <div class="col-md-5">
-              <div class="input-group">
-                <input type="text" class="form-control image-url" placeholder="Paste Image URL">
-                <span class="input-group-text">OR</span>
-                <input type="file" class="form-control image-upload" accept="image/*">
-              </div>
-              <input type="hidden" class="image-base64">
-              <img src="" class="image-preview-thumbnail border mt-1">
-            </div>
-            <div class="col-md-2">
-              <button type="button" class="btn btn-danger remove-item w-100">Remove</button>
-            </div>
+          <!-- Item row dynamically added here -->
+        </div>
+        <button type="button" id="add-item" class="btn btn-primary mt-2">Add Item</button>
+        
+        <hr>
+        
+        <!-- Live Totals Section -->
+        <div class="d-flex justify-content-between align-items-end">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="applyVat">
+            <label class="form-check-label fw-bold" for="applyVat">Apply 20% Standard VAT</label>
+          </div>
+          <div class="text-end">
+            <div class="text-muted">Subtotal: <span id="ui-subtotal">£0.00</span></div>
+            <div class="text-muted" id="ui-vat-row" style="display: none;">VAT (20%): <span id="ui-vat">£0.00</span></div>
+            <h4 class="mt-2 mb-0 fw-bold">Total: <span id="ui-total">£0.00</span></h4>
           </div>
         </div>
-        <button type="button" id="add-item" class="btn btn-primary">Add Item</button>
       </div>
       
       <!-- Courier & Payment -->
@@ -119,22 +127,22 @@
         <label class="form-check-label" for="includeCourier">Include Courier Contact Details</label>
       </div>
       
-      <div id="courier-details" style="display: none;" class="mb-3">
+      <div id="courier-details" style="display: none;" class="mb-3 p-3 border rounded">
         <div class="mb-3"><label class="form-label">Courier Name <span class="text-danger">*</span></label><input type="text" class="form-control" id="courierName"></div>
         <div class="mb-3"><label class="form-label">Courier Number <span class="text-danger">*</span></label><input type="text" class="form-control" id="courierNumber"></div>
         <div class="mb-3"><label class="form-label">Payment Instructions <span class="text-danger">*</span></label><textarea class="form-control" id="paymentInstructions" rows="3" required></textarea></div>
       </div>
       
       <!-- Bank Details -->
-      <div class="mb-3">
+      <div class="mb-3 p-3 border rounded">
         <h4>Bank Details <span class="text-danger">*</span></h4>
         <div class="form-check">
           <input class="form-check-input" type="radio" name="bankDetails" id="option1" value="option1" checked>
           <label class="form-check-label" for="option1">Option 1: Mrs Marcia Platts</label>
         </div>
-        <div id="bank-option1" class="mt-2"><p>Mrs Marcia Platts<br>A/c. 64237273<br>Sort. 01-08-38</p></div>
+        <div id="bank-option1" class="mt-2 text-muted"><p>Mrs Marcia Platts<br>A/c. 64237273<br>Sort. 01-08-38</p></div>
         
-        <div class="form-check mt-2">
+        <div class="form-check mt-3">
           <input class="form-check-input" type="radio" name="bankDetails" id="option2" value="option2">
           <label class="form-check-label" for="option2">Option 2: Enter Bank Details Manually</label>
         </div>
@@ -146,24 +154,24 @@
       </div>
       
       <!-- Footer -->
-      <div class="mb-3">
-        <label for="footer" class="form-label">Footer</label>
+      <div class="mb-4">
+        <label for="footer" class="form-label">Footer Notice</label>
         <input type="text" class="form-control" id="footer" placeholder="Enter footer text">
       </div>
       
       <!-- Action Buttons -->
-      <div class="d-flex gap-2 flex-wrap">
-        <button type="button" id="generateInvoice" class="btn btn-success">Generate Invoice</button>
-        <button type="button" id="saveInvoice" class="btn btn-info text-white">Save Invoice to History</button>
-        <button type="button" id="shareLinkBtn" class="btn btn-warning">Copy Shareable Link</button>
+      <div class="d-flex gap-2 flex-wrap pb-4 border-bottom">
+        <button type="button" id="generateInvoice" class="btn btn-success">Generate PDF Invoice</button>
+        <button type="button" id="saveInvoice" class="btn btn-info text-white">Save to Local History</button>
+        <button type="button" id="shareLinkBtn" class="btn btn-warning">Copy Shareable URL</button>
         <small id="shareWarning" class="text-danger d-none mt-2 w-100">Sharing via URL is disabled because local images are attached (file size too large for URLs).</small>
       </div>
     </form>
     
     <!-- History -->
-    <div id="history-section" class="mt-5 mb-5">
-      <h3>Saved Invoices History</h3>
-      <div id="history-list" class="list-group"></div>
+    <div id="history-section" class="mt-4 mb-5">
+      <h4>Saved Invoices History</h4>
+      <div id="history-list" class="list-group mt-3"></div>
     </div>
 
     <!-- Hidden Content for PDF Generation -->
@@ -188,11 +196,13 @@
       const saveInvoiceButton = document.getElementById('saveInvoice');
       const shareLinkBtn = document.getElementById('shareLinkBtn');
       const historyList = document.getElementById('history-list');
+      const applyVatCheckbox = document.getElementById('applyVat');
       
       document.getElementById('footer').value = "For any inquiries, please contact us at Mjplatts@hotmail.co.uk or call 07713883813.";
 
       initializeInvoice();
       postcodeInput.required = true;
+      addItemButton.click(); // Add first item on load
       renderHistory();
       checkUrlForData();
 
@@ -253,9 +263,31 @@
         addressSuggestions.style.display = 'none';
       });
 
+      // ---- Totals Calculation Logic ----
+      function calculateLiveTotals() {
+        let subtotal = 0;
+        document.querySelectorAll('.item-amount').forEach(input => {
+          const val = parseFloat(input.value);
+          if (!isNaN(val)) subtotal += val;
+        });
+        
+        const applyVat = applyVatCheckbox.checked;
+        const vat = applyVat ? subtotal * 0.20 : 0;
+        const total = subtotal + vat;
+
+        document.getElementById('ui-subtotal').textContent = `£${subtotal.toFixed(2)}`;
+        document.getElementById('ui-vat').textContent = `£${vat.toFixed(2)}`;
+        document.getElementById('ui-vat-row').style.display = applyVat ? 'block' : 'none';
+        document.getElementById('ui-total').textContent = `£${total.toFixed(2)}`;
+
+        return { subtotal, vat, total, applyVat };
+      }
+
+      applyVatCheckbox.addEventListener('change', calculateLiveTotals);
+
       addItemButton.addEventListener('click', () => {
         const row = document.createElement('div');
-        row.className = 'row mb-2 item';
+        row.className = 'row mb-2 item align-items-center';
         row.innerHTML = `
           <div class="col-md-3"><input type="text" class="form-control item-desc" placeholder="Item Description" required></div>
           <div class="col-md-2"><input type="number" class="form-control item-amount" placeholder="Amount (£)" min="0" step="0.01" required></div>
@@ -263,7 +295,7 @@
             <div class="input-group">
               <input type="text" class="form-control image-url" placeholder="Paste Image URL">
               <span class="input-group-text">OR</span>
-              <input type="file" class="form-control image-upload" accept="image/*">
+              <input type="file" class="form-control image-upload" accept="image/*" style="max-width: 110px;">
             </div>
             <input type="hidden" class="image-base64">
             <img src="" class="image-preview-thumbnail border mt-1">
@@ -271,13 +303,19 @@
           <div class="col-md-2"><button type="button" class="btn btn-danger remove-item w-100">Remove</button></div>
         `;
         itemsContainer.appendChild(row);
+        
+        // Listen for value changes to update total live
+        row.querySelector('.item-amount').addEventListener('input', calculateLiveTotals);
       });
 
       itemsContainer.addEventListener('click', (e) => {
-        if (e.target.classList.contains('remove-item')) e.target.closest('.item').remove();
+        if (e.target.classList.contains('remove-item')) {
+          e.target.closest('.item').remove();
+          calculateLiveTotals(); // Recalculate when item is removed
+        }
       });
 
-      // Local Image Upload & Compression via Canvas
+      // Canvas image compression
       itemsContainer.addEventListener('change', (e) => {
         if (e.target.classList.contains('image-upload')) {
           const file = e.target.files[0];
@@ -287,26 +325,22 @@
           reader.onload = function(event) {
             const img = new Image();
             img.onload = function() {
-              // Canvas Compression (shrinks to 200px max width to fit in cache limits)
               const canvas = document.createElement('canvas');
               const MAX_WIDTH = 200;
-              const scale = Math.min(MAX_WIDTH / img.width, 1); // Don't scale up small images
+              const scale = Math.min(MAX_WIDTH / img.width, 1);
               canvas.width = img.width * scale;
               canvas.height = img.height * scale;
 
               const ctx = canvas.getContext('2d');
               ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-              // Compress to JPEG at 70% quality
               const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
-              
               const parent = e.target.closest('.col-md-5');
               parent.querySelector('.image-base64').value = compressedBase64;
               const preview = parent.querySelector('.image-preview-thumbnail');
               preview.src = compressedBase64;
               preview.style.display = 'block';
 
-              // Disable URL Sharing to prevent crash
               document.getElementById('shareLinkBtn').disabled = true;
               document.getElementById('shareWarning').classList.remove('d-none');
             };
@@ -340,6 +374,7 @@
           cNum: document.getElementById('courierNumber').value,
           payInst: document.getElementById('paymentInstructions').value,
           footer: document.getElementById('footer').value,
+          applyVat: document.getElementById('applyVat').checked,
           items: []
         };
         
@@ -358,8 +393,8 @@
         try {
           const b64 = btoa(encodeURIComponent(JSON.stringify(collectFormData())));
           navigator.clipboard.writeText(window.location.href.split('#')[0] + '#' + b64);
-          alert('Link copied!');
-        } catch(e) { alert('Data too large for URL.'); }
+          alert('Link copied! You can share this URL.');
+        } catch(e) { alert('Data too large for URL. Clear local images and try again.'); }
       });
 
       function checkUrlForData() {
@@ -376,15 +411,17 @@
         const data = collectFormData();
         data.fullNum = document.getElementById('invoiceNumber').value + data.seq;
         data.date = document.getElementById('invoiceDate').value;
+        const totals = calculateLiveTotals();
+        data.total = totals.total;
         
         let hist = JSON.parse(localStorage.getItem('invHist')) || [];
         try {
           hist.push(data);
           localStorage.setItem('invHist', JSON.stringify(hist));
-          alert('Saved!');
+          alert('Invoice saved successfully to local device memory!');
           renderHistory();
         } catch (e) {
-          alert('Storage full! You have saved too many images. Please delete old history.');
+          alert('Storage full! You have saved too many images. Please clear browser data.');
         }
       });
 
@@ -393,8 +430,8 @@
         historyList.innerHTML = '';
         hist.slice().reverse().forEach(data => {
           const btn = document.createElement('button');
-          btn.className = 'list-group-item list-group-item-action d-flex justify-content-between';
-          btn.innerHTML = `<span><strong>${data.fullNum}</strong> - ${data.toName} (${data.date})</span><span class="badge bg-primary rounded-pill">Load</span>`;
+          btn.className = 'list-group-item list-group-item-action d-flex justify-content-between align-items-center';
+          btn.innerHTML = `<span><strong>${data.fullNum}</strong> - ${data.toName} (${data.date}) - £${(data.total || 0).toFixed(2)}</span><span class="badge bg-primary rounded-pill">Load</span>`;
           btn.onclick = () => loadInvoiceData(data);
           historyList.appendChild(btn);
         });
@@ -418,6 +455,7 @@
         document.getElementById('courierName').value = data.cName || '';
         document.getElementById('courierNumber').value = data.cNum || '';
         document.getElementById('paymentInstructions').value = data.payInst || '';
+        document.getElementById('applyVat').checked = data.applyVat || false;
         
         itemsContainer.innerHTML = '';
         if(data.items.length) {
@@ -426,7 +464,6 @@
             const last = itemsContainer.lastElementChild;
             last.querySelector('.item-desc').value = i.desc;
             last.querySelector('.item-amount').value = i.amt;
-            // Differentiate between base64 cache image and url
             if (i.img && i.img.startsWith('data:image')) {
                last.querySelector('.image-base64').value = i.img;
                const preview = last.querySelector('.image-preview-thumbnail');
@@ -437,36 +474,70 @@
             }
           });
         }
+        calculateLiveTotals();
+        window.scrollTo(0,0);
       }
 
       generateInvoiceButton.addEventListener('click', async () => {
         const data = collectFormData();
+        const totals = calculateLiveTotals(); // Extract specific figures for PDF
         const invNum = document.getElementById('invoiceNumber').value + data.seq;
         
         let bankHtml = document.getElementById('option1').checked 
           ? `Mrs Marcia Platts<br>A/c. 64237273<br>Sort. 01-08-38` 
           : `${sanitizeHTML(document.getElementById('accountHolder').value)}<br>A/c. ${sanitizeHTML(document.getElementById('accountNumber').value)}<br>Sort. ${sanitizeHTML(document.getElementById('sortCode').value)}`;
 
+        // HTML Layout grouped for optimal single page display and dynamic items splitting
         const html = `
-          <div class="p-4 invoice-pdf-content">
-            <div class="text-center mb-4"><img src="https://raw.githubusercontent.com/hugh-platts/riddit-invoice-generator/main/darklogo2.png" class="invoice-logo" crossorigin="anonymous"></div>
-            <h2>Invoice</h2>
-            <p><strong>Invoice Number:</strong> ${sanitizeHTML(invNum)}</p>
-            <p><strong>Date:</strong> ${sanitizeHTML(document.getElementById('invoiceDate').value)}</p>
-            <p><strong>To:</strong> ${sanitizeHTML(data.toName)}<br>${sanitizeHTML(data.addr1)}<br>${sanitizeHTML(data.city)}, ${sanitizeHTML(data.post)}</p>
+          <div class="invoice-pdf-content">
+            <img src="https://raw.githubusercontent.com/hugh-platts/riddit-invoice-generator/main/darklogo2.png" class="invoice-logo" crossorigin="anonymous">
             
-            <h4>Items</h4>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                <div>
+                    <h2 style="text-align: left; margin:0;">INVOICE</h2>
+                    <p style="margin-top: 5px;"><strong>Date:</strong> ${sanitizeHTML(document.getElementById('invoiceDate').value)}<br>
+                    <strong>Invoice No:</strong> ${sanitizeHTML(invNum)}</p>
+                </div>
+                <div style="text-align: right;">
+                    <strong>Bill To:</strong><br>
+                    ${sanitizeHTML(data.toName)}<br>
+                    ${sanitizeHTML(data.addr1)}<br>
+                    ${sanitizeHTML(data.city)}, ${sanitizeHTML(data.post)}
+                </div>
+            </div>
+            
             <table>
-              <thead><tr><th>Description</th><th>Amount (£)</th><th>Image</th></tr></thead>
+              <thead><tr><th>Description</th><th style="width: 100px;">Amount (£)</th><th style="width: 80px; text-align: center;">Image</th></tr></thead>
               <tbody>
-                ${data.items.map(i => `<tr><td>${sanitizeHTML(i.desc)}</td><td>${parseFloat(i.amt).toFixed(2)}</td><td>${i.img ? `<img src="${i.img}" class="item-image" crossorigin="anonymous">` : 'N/A'}</td></tr>`).join('')}
+                ${data.items.map(i => `<tr>
+                  <td>${sanitizeHTML(i.desc)}</td>
+                  <td>${parseFloat(i.amt).toFixed(2)}</td>
+                  <td style="text-align: center;">${i.img ? `<img src="${i.img}" class="item-image" crossorigin="anonymous">` : ''}</td>
+                </tr>`).join('')}
               </tbody>
             </table>
             
-            ${data.incCourier ? `<h4>Courier Contact</h4><p>Name: ${sanitizeHTML(data.cName)}<br>Number: ${sanitizeHTML(data.cNum)}<br>Instructions: ${sanitizeHTML(data.payInst)}</p>` : ''}
+            <div class="invoice-totals-box">
+                <p>Subtotal: £${totals.subtotal.toFixed(2)}</p>
+                ${totals.applyVat ? `<p>VAT (20%): £${totals.vat.toFixed(2)}</p>` : ''}
+                <h3>Total: £${totals.total.toFixed(2)}</h3>
+            </div>
+
+            <div class="invoice-footer-grid">
+                <div>
+                    <h4>Bank Details</h4>
+                    <p>${bankHtml}</p>
+                </div>
+                ${data.incCourier ? `
+                <div>
+                    <h4>Courier & Payment Info</h4>
+                    <p><strong>Name:</strong> ${sanitizeHTML(data.cName)}<br>
+                    <strong>Number:</strong> ${sanitizeHTML(data.cNum)}<br>
+                    <strong>Ref:</strong> ${sanitizeHTML(data.payInst)}</p>
+                </div>` : '<div></div>'}
+            </div>
             
-            <h4>Bank Details</h4><p>${bankHtml}</p>
-            <footer><p>${sanitizeHTML(data.footer)}</p></footer>
+            <footer><p>${sanitizeHTML(data.footer)}<br>Thank you for your business! Marcia (Riddit Homes)</p></footer>
           </div>
         `;
         
@@ -477,20 +548,21 @@
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF('p', 'mm', 'a4');
         
-        // --- ADDED MARGINS FOR PAGE 2 SPACING ---
-        await pdf.html(container.querySelector('.invoice-pdf-content'), {
-          callback: function (doc) {
-            doc.save(`${data.toName.replace(/[^a-z0-9]/gi, '_')}_${invNum}.pdf`);
-          },
-          margin: [15, 15, 15, 15], // 15mm spacing around the PDF page
-          autoPaging: 'text', // Smart pagination to prevent slice cuts
-          x: 0,
-          y: 0,
-          width: 180, // A4 width (210) minus left/right margins (30)
-          windowWidth: container.scrollWidth
-        });
-        
-        container.style.display = 'none';
+        // Wait briefly for images to mount
+        setTimeout(async () => {
+            await pdf.html(container.querySelector('.invoice-pdf-content'), {
+              callback: function (doc) {
+                doc.save(`${data.toName.replace(/[^a-z0-9]/gi, '_')}_${invNum}.pdf`);
+              },
+              margin: [10, 10, 10, 10], // Tighter margins to assist fitting large arrays
+              autoPaging: 'text',
+              x: 0,
+              y: 0,
+              width: 190, 
+              windowWidth: container.scrollWidth
+            });
+            container.style.display = 'none';
+        }, 100);
       });
     });
   </script>
